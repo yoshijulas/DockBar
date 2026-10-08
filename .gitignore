@@ -12,3 +12,7 @@ install-cert.ps1
 storedisplay/
 release_notes*.md
 store_listing*.md
+.idea/
+.editorconfig
+Directory.Build.props
+omnisharp.json

@@ -142,7 +142,7 @@ public static class ThemeService
         }
     }
 
-    private static SolidColorBrush CreateFrozenBrush(Color color)
+    public static SolidColorBrush CreateFrozenBrush(Color color)
     {
         var brush = new SolidColorBrush(color);
         brush.Freeze();

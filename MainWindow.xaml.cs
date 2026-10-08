@@ -965,9 +965,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             ? Math.Clamp(_config.BackgroundOpacity, 0.0, 1.0)
             : 1.0;
         var alpha = (byte)Math.Clamp((int)Math.Round(opacity * 255), 0, 255);
-        var brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(alpha, color.R, color.G, color.B));
-        brush.Freeze();
-        DockBackgroundBrush = brush;
+        DockBackgroundBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromArgb(alpha, color.R, color.G, color.B));
 
         // Windows 7 Aero Glass styling: Rectangular straight sidebar with 1px border on the inner dividing edge
         if (_dockSide == DockSide.Left)
@@ -984,15 +982,11 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             var borderColor = _config.UseLightText
                 ? System.Windows.Media.Color.FromArgb(55, 255, 255, 255)
                 : System.Windows.Media.Color.FromArgb(45, 0, 0, 0);
-            var borderBrush = new SolidColorBrush(borderColor);
-            borderBrush.Freeze();
-            DockBorderBrush = borderBrush;
+            DockBorderBrush = ThemeService.CreateFrozenBrush(borderColor);
         }
         else
         {
-            var borderBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(50, 128, 128, 128));
-            borderBrush.Freeze();
-            DockBorderBrush = borderBrush;
+            DockBorderBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromArgb(50, 128, 128, 128));
         }
     }
     private void UpdateTextBrush()
@@ -1000,9 +994,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         var color = _config.UseLightText
             ? System.Windows.Media.Color.FromRgb(242, 242, 242)
             : System.Windows.Media.Color.FromRgb(10, 10, 10);
-        var brush = new SolidColorBrush(color);
-        brush.Freeze();
-        DockTextBrush = brush;
+        DockTextBrush = ThemeService.CreateFrozenBrush(color);
 
         if (_config.EnableTextShadow)
         {

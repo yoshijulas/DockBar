@@ -68,23 +68,22 @@ public partial class ThemedMessageDialogWindow : Window, INotifyPropertyChanged
         {
             case MessageBoxImage.Error: // or Hand, Stop
                 DialogGlyph = "\uE783"; // Exclamation in octagon / Stop
-                DialogGlyphBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(248, 81, 73));
+                DialogGlyphBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(248, 81, 73));
                 break;
             case MessageBoxImage.Warning: // or Exclamation
                 DialogGlyph = "\uE7BA"; // Warning triangle
-                DialogGlyphBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(240, 180, 41));
+                DialogGlyphBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(240, 180, 41));
                 break;
             case MessageBoxImage.Question:
                 DialogGlyph = "\uE897"; // Help / Question
-                DialogGlyphBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(88, 166, 255));
+                DialogGlyphBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(88, 166, 255));
                 break;
             case MessageBoxImage.Information: // or Asterisk
             default:
                 DialogGlyph = "\uE946"; // Info bubble
-                DialogGlyphBrush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(88, 166, 255));
+                DialogGlyphBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(88, 166, 255));
                 break;
         }
-        DialogGlyphBrush.Freeze();
 
         // Configure Buttons
         switch (button)

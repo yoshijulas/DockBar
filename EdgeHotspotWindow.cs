@@ -2,6 +2,7 @@ using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using DockBar.Services;
 
 namespace DockBar;
 
@@ -21,9 +22,7 @@ public sealed class EdgeHotspotWindow : Window
         ShowActivated = false;
         Topmost = true;
         AllowsTransparency = true;
-        var brush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(15, 0, 0, 0));
-        brush.Freeze();
-        Background = brush;
+        Background = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromArgb(15, 0, 0, 0));
         Opacity = 1.0;
         Focusable = false;
         WindowStartupLocation = WindowStartupLocation.Manual;

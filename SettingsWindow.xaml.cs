@@ -49,27 +49,13 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
     public bool IsBasicTabSelected
     {
         get => _selectedTab == 0;
-        set
-        {
-            if (value && _selectedTab != 0)
-            {
-                _selectedTab = 0;
-                NotifyTabsChanged();
-            }
-        }
+        set => SelectTab(0, value);
     }
 
     public bool IsUtilitiesTabSelected
     {
         get => _selectedTab == 1;
-        set
-        {
-            if (value && _selectedTab != 1)
-            {
-                _selectedTab = 1;
-                NotifyTabsChanged();
-            }
-        }
+        set => SelectTab(1, value);
     }
 
     public bool IsClockTabSelected
@@ -81,27 +67,13 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
     public bool IsMediaTabSelected
     {
         get => _selectedTab == 2;
-        set
-        {
-            if (value && _selectedTab != 2)
-            {
-                _selectedTab = 2;
-                NotifyTabsChanged();
-            }
-        }
+        set => SelectTab(2, value);
     }
 
     public bool IsExperimentalTabSelected
     {
         get => _selectedTab == 3;
-        set
-        {
-            if (value && _selectedTab != 3)
-            {
-                _selectedTab = 3;
-                NotifyTabsChanged();
-            }
-        }
+        set => SelectTab(3, value);
     }
 
     private void NotifyTabsChanged()
@@ -112,6 +84,15 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
         OnPropertyChanged(nameof(IsMediaTabSelected));
         OnPropertyChanged(nameof(IsExperimentalTabSelected));
     }
+
+    private void SelectTab(int index, bool value)
+    {
+        if (!value || _selectedTab == index) return;
+        _selectedTab = index;
+        NotifyTabsChanged();
+
+    }
+
 
     public string PreviewClockTime
     {
@@ -161,12 +142,7 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
 
     public SolidColorBrush AccentPreviewBrush
     {
-        get
-        {
-            var brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Config.AccentR, Config.AccentG, Config.AccentB));
-            brush.Freeze();
-            return brush;
-        }
+        get => ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(Config.AccentR, Config.AccentG, Config.AccentB));
     }
 
     public SolidColorBrush PreviewBrush
@@ -457,16 +433,12 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
         var color = Config.UseLightText
             ? System.Windows.Media.Color.FromRgb(242, 242, 242)
             : System.Windows.Media.Color.FromRgb(10, 10, 10);
-        var brush = new SolidColorBrush(color);
-        brush.Freeze();
-        TextBrush = brush;
+        TextBrush = ThemeService.CreateFrozenBrush(color);
 
         var backgroundColor = Config.UseLightText
             ? System.Windows.Media.Color.FromRgb(0, 0, 0)
             : System.Windows.Media.Color.FromRgb(255, 255, 255);
-        var backgroundBrush = new SolidColorBrush(backgroundColor);
-        backgroundBrush.Freeze();
-        SettingsBackgroundBrush = backgroundBrush;
+        SettingsBackgroundBrush = ThemeService.CreateFrozenBrush(backgroundColor);
     }
 
     private void NumericSettingChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -505,7 +477,7 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
         Config.ShowHardwareModelNames = false;
         Config.ShowPowerControl = false;
         Config.ShowCaffeine = false;
-        Config.WidgetOrder = new() { "Clock", "Media", "Volume", "Resource", "Power", "Caffeine", "Pagination" };
+        Config.WidgetOrder = ["Clock", "Media", "Volume", "Resource", "Power", "Caffeine", "Pagination"];
         ApplyWidgetOrderToPreview();
         _pendingR = Config.BackgroundR;
         _pendingG = Config.BackgroundG;
@@ -826,9 +798,7 @@ public partial class SettingsWindow : Window, INotifyPropertyChanged
     private void UpdateHueBrush()
     {
         var (r, g, b) = HsvToRgb(_hue, 1, 1);
-        var brush = new SolidColorBrush(System.Windows.Media.Color.FromRgb(r, g, b));
-        brush.Freeze();
-        HueBrush = brush;
+        HueBrush = ThemeService.CreateFrozenBrush(System.Windows.Media.Color.FromRgb(r, g, b));
     }
 
     private static void RgbToHsv(byte r, byte g, byte b, out double h, out double s, out double v)

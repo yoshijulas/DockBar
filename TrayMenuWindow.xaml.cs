@@ -35,77 +35,77 @@ public partial class TrayMenuWindow : Window, INotifyPropertyChanged
     public Brush MenuBackgroundBrush
     {
         get => _menuBackgroundBrush;
-        private set { _menuBackgroundBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _menuBackgroundBrush, value);
     }
 
     private Brush _menuBorderBrush = Brushes.Transparent;
     public Brush MenuBorderBrush
     {
         get => _menuBorderBrush;
-        private set { _menuBorderBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _menuBorderBrush, value);
     }
 
     private Brush _menuTextBrush = Brushes.White;
     public Brush MenuTextBrush
     {
         get => _menuTextBrush;
-        private set { _menuTextBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _menuTextBrush, value);
     }
 
     private Brush _menuTextMutedBrush = Brushes.LightGray;
     public Brush MenuTextMutedBrush
     {
         get => _menuTextMutedBrush;
-        private set { _menuTextMutedBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _menuTextMutedBrush, value);
     }
 
     private Brush _headerPanelBrush = Brushes.Transparent;
     public Brush HeaderPanelBrush
     {
         get => _headerPanelBrush;
-        private set { _headerPanelBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _headerPanelBrush, value);
     }
 
     private Brush _headerBorderBrush = Brushes.Transparent;
     public Brush HeaderBorderBrush
     {
         get => _headerBorderBrush;
-        private set { _headerBorderBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _headerBorderBrush, value);
     }
 
     private Brush _buttonHoverBackgroundBrush = Brushes.Transparent;
     public Brush ButtonHoverBackgroundBrush
     {
         get => _buttonHoverBackgroundBrush;
-        private set { _buttonHoverBackgroundBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _buttonHoverBackgroundBrush, value);
     }
 
     private Brush _buttonHoverBorderBrush = Brushes.Transparent;
     public Brush ButtonHoverBorderBrush
     {
         get => _buttonHoverBorderBrush;
-        private set { _buttonHoverBorderBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _buttonHoverBorderBrush, value);
     }
 
     private Brush _glyphHostBrush = Brushes.Transparent;
     public Brush GlyphHostBrush
     {
         get => _glyphHostBrush;
-        private set { _glyphHostBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _glyphHostBrush, value);
     }
 
     private Brush _glyphBorderBrush = Brushes.Transparent;
     public Brush GlyphBorderBrush
     {
         get => _glyphBorderBrush;
-        private set { _glyphBorderBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _glyphBorderBrush, value);
     }
 
     private Brush _dividerBrush = Brushes.Transparent;
     public Brush DividerBrush
     {
         get => _dividerBrush;
-        private set { _dividerBrush = value; OnPropertyChanged(); }
+        private set => SetBrush(ref _dividerBrush, value);
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -133,6 +133,18 @@ public partial class TrayMenuWindow : Window, INotifyPropertyChanged
         Loaded += TrayMenuWindow_Loaded;
     }
 
+    private bool SetBrush(ref Brush f, Brush v, [CallerMemberName] string? propertyName = null)
+    {
+        if (Equals(f, v))
+        {
+            return false;
+        }
+
+        f = v;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
+
     private void ApplyTheme()
     {
         var color = Color.FromRgb(_config.BackgroundR, _config.BackgroundG, _config.BackgroundB);
@@ -141,9 +153,7 @@ public partial class TrayMenuWindow : Window, INotifyPropertyChanged
             : 1.0;
         var alpha = (byte)Math.Clamp((int)Math.Round(opacity * 255), 0, 255);
 
-        var bgBrush = new SolidColorBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
-        bgBrush.Freeze();
-        MenuBackgroundBrush = bgBrush;
+        MenuBackgroundBrush = ThemeService.CreateFrozenBrush(Color.FromArgb(alpha, color.R, color.G, color.B));
 
         Color borderColor;
         if (_config.UseTransparency)
@@ -158,72 +168,52 @@ public partial class TrayMenuWindow : Window, INotifyPropertyChanged
                 ? Color.FromArgb(60, 255, 255, 255)
                 : Color.FromArgb(50, 0, 0, 0);
         }
-        var bBrush = new SolidColorBrush(borderColor);
-        bBrush.Freeze();
-        MenuBorderBrush = bBrush;
+        MenuBorderBrush = ThemeService.CreateFrozenBrush(borderColor);
 
         var textColor = _config.UseLightText
             ? Color.FromRgb(242, 242, 242)
             : Color.FromRgb(15, 15, 15);
-        var tBrush = new SolidColorBrush(textColor);
-        tBrush.Freeze();
-        MenuTextBrush = tBrush;
+        MenuTextBrush = ThemeService.CreateFrozenBrush(textColor);
 
         var textMutedColor = _config.UseLightText
             ? Color.FromArgb(170, 242, 242, 242)
             : Color.FromArgb(170, 15, 15, 15);
-        var tmBrush = new SolidColorBrush(textMutedColor);
-        tmBrush.Freeze();
-        MenuTextMutedBrush = tmBrush;
+        MenuTextMutedBrush = ThemeService.CreateFrozenBrush(textMutedColor);
 
         var headerPanelColor = _config.UseLightText
             ? Color.FromArgb(30, 255, 255, 255)
             : Color.FromArgb(25, 0, 0, 0);
-        var hpBrush = new SolidColorBrush(headerPanelColor);
-        hpBrush.Freeze();
-        HeaderPanelBrush = hpBrush;
+        HeaderPanelBrush = ThemeService.CreateFrozenBrush(headerPanelColor);
 
         var headerBorderColor = _config.UseLightText
             ? Color.FromArgb(40, 255, 255, 255)
             : Color.FromArgb(35, 0, 0, 0);
-        var hbBrush = new SolidColorBrush(headerBorderColor);
-        hbBrush.Freeze();
-        HeaderBorderBrush = hbBrush;
+        HeaderBorderBrush = ThemeService.CreateFrozenBrush(headerBorderColor);
 
         var hoverBgColor = _config.UseLightText
-            ? Color.FromArgb(40, 255, 255, 255)
-            : Color.FromArgb(35, 0, 0, 0);
-        var hbgBrush = new SolidColorBrush(hoverBgColor);
-        hbgBrush.Freeze();
-        ButtonHoverBackgroundBrush = hbgBrush;
+          ? Color.FromArgb(40, 255, 255, 255)
+          : Color.FromArgb(35, 0, 0, 0);
+        ButtonHoverBackgroundBrush = ThemeService.CreateFrozenBrush(hoverBgColor);
 
         var hoverBorderColor = _config.UseLightText
-            ? Color.FromArgb(75, 255, 255, 255)
-            : Color.FromArgb(65, 0, 0, 0);
-        var hbbBrush = new SolidColorBrush(hoverBorderColor);
-        hbbBrush.Freeze();
-        ButtonHoverBorderBrush = hbbBrush;
+          ? Color.FromArgb(75, 255, 255, 255)
+          : Color.FromArgb(65, 0, 0, 0);
+        ButtonHoverBorderBrush = ThemeService.CreateFrozenBrush(hoverBorderColor);
 
         var glyphHostColor = _config.UseLightText
-            ? Color.FromArgb(25, 255, 255, 255)
-            : Color.FromArgb(20, 0, 0, 0);
-        var ghBrush = new SolidColorBrush(glyphHostColor);
-        ghBrush.Freeze();
-        GlyphHostBrush = ghBrush;
+          ? Color.FromArgb(25, 255, 255, 255)
+          : Color.FromArgb(20, 0, 0, 0);
+        GlyphHostBrush = ThemeService.CreateFrozenBrush(glyphHostColor);
 
         var glyphBorderColor = _config.UseLightText
-            ? Color.FromArgb(45, 255, 255, 255)
-            : Color.FromArgb(35, 0, 0, 0);
-        var gbBrush = new SolidColorBrush(glyphBorderColor);
-        gbBrush.Freeze();
-        GlyphBorderBrush = gbBrush;
+          ? Color.FromArgb(45, 255, 255, 255)
+          : Color.FromArgb(35, 0, 0, 0);
+        GlyphBorderBrush = ThemeService.CreateFrozenBrush(glyphBorderColor);
 
         var divColor = _config.UseLightText
-            ? Color.FromArgb(40, 255, 255, 255)
-            : Color.FromArgb(35, 0, 0, 0);
-        var dBrush = new SolidColorBrush(divColor);
-        dBrush.Freeze();
-        DividerBrush = dBrush;
+          ? Color.FromArgb(40, 255, 255, 255)
+          : Color.FromArgb(35, 0, 0, 0);
+        DividerBrush = ThemeService.CreateFrozenBrush(divColor);
     }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -235,7 +225,6 @@ public partial class TrayMenuWindow : Window, INotifyPropertyChanged
     {
         _anchorBounds = anchorBounds;
         Show();
-        Activate();
     }
 
     public void RequestClose(Action? afterClose = null)

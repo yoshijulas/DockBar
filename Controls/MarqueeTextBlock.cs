@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using DockBar.Services;
 using Brush = System.Windows.Media.Brush;
 using Brushes = System.Windows.Media.Brushes;
 using Color = System.Windows.Media.Color;
@@ -21,8 +22,7 @@ public class MarqueeTextBlock : FrameworkElement
 
     static MarqueeTextBlock()
     {
-        ShadowBrush = new SolidColorBrush(Color.FromArgb(160, 0, 0, 0));
-        ShadowBrush.Freeze();
+        ShadowBrush = ThemeService.CreateFrozenBrush(Color.FromArgb(160, 0, 0, 0));
 
         EdgeFadingMask = new LinearGradientBrush
         {
